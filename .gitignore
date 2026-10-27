@@ -1,0 +1,8 @@
+# Local configuration and secrets
+.env
+
+# 추후 만들 사진 깃허브에 올라가는것 방지
+backend/uploads/
+
+# IDE workspace settings
+.idea/

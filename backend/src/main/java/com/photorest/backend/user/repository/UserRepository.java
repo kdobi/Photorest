@@ -1,5 +1,6 @@
-package com.photorest.backend.user;
+package com.photorest.backend.user.repository;
 
+import com.photorest.backend.user.domain.User;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

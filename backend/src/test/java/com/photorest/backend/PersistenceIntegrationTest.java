@@ -4,12 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.photorest.backend.folder.Folder;
-import com.photorest.backend.folder.FolderRepository;
-import com.photorest.backend.photo.Photo;
-import com.photorest.backend.photo.PhotoRepository;
-import com.photorest.backend.user.User;
-import com.photorest.backend.user.UserRepository;
+import com.photorest.backend.folder.domain.Folder;
+import com.photorest.backend.folder.repository.FolderRepository;
+import com.photorest.backend.photo.domain.Photo;
+import com.photorest.backend.photo.repository.PhotoRepository;
+import com.photorest.backend.user.domain.User;
+import com.photorest.backend.user.repository.UserRepository;
+import com.photorest.backend.user.service.UserService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ class PersistenceIntegrationTest {
 
     @Autowired
     private PhotoRepository photoRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Test
     void savesAndFindsUserFolderAndPhoto() {
@@ -55,5 +59,29 @@ class PersistenceIntegrationTest {
         assertEquals(1, photos.size());
         assertEquals("test-photo.jpg", photos.getFirst().getOriginalFilename());
         assertTrue(photoRepository.findByIdAndFolderUserId(photo.getId(), user.getId()).isPresent());
+    }
+
+    @Test
+    void createsKakaoUserAndDefaultFolderOnlyOnFirstLogin() {
+        User firstLoginUser = userService.findOrCreateKakaoUser(
+                987_654_321L,
+                "카카오 사용자",
+                "https://example.com/kakao-profile.jpg"
+        );
+        User secondLoginUser = userService.findOrCreateKakaoUser(
+                987_654_321L,
+                "변경된 닉네임",
+                "https://example.com/changed-profile.jpg"
+        );
+
+        assertNotNull(firstLoginUser.getId());
+        assertEquals(firstLoginUser.getId(), secondLoginUser.getId());
+        assertEquals(1, userRepository.count());
+
+        List<Folder> folders = folderRepository.findAllByUserIdOrderByCreatedAtDesc(
+                firstLoginUser.getId()
+        );
+        assertEquals(1, folders.size());
+        assertEquals("보관함", folders.getFirst().getName());
     }
 }

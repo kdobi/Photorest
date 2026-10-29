@@ -1,41 +1,32 @@
-package com.photorest.backend.folder;
+package com.photorest.backend.user.domain;
 
-import com.photorest.backend.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.time.Instant;
 import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(
-        name = "folders",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uq_folders_user_name",
-                columnNames = {"user_id", "name"}
-        )
-)
-public class Folder {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "kakao_id", nullable = false, unique = true)
+    private Long kakaoId;
 
-    @Column(nullable = false, length = 100)
-    private String name;
+    @Column(name = "display_name", nullable = false, length = 100)
+    private String displayName;
+
+    @Column(name = "profile_image_url", length = 500)
+    private String profileImageUrl;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -45,24 +36,29 @@ public class Folder {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected Folder() {
+    protected User() {
     }
 
-    public Folder(User user, String name) {
-        this.user = user;
-        this.name = name;
+    public User(Long kakaoId, String displayName, String profileImageUrl) {
+        this.kakaoId = kakaoId;
+        this.displayName = displayName;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public Long getKakaoId() {
+        return kakaoId;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 
     public Instant getCreatedAt() {

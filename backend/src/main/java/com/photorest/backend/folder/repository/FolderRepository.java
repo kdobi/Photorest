@@ -1,5 +1,6 @@
-package com.photorest.backend.folder;
+package com.photorest.backend.folder.repository;
 
+import com.photorest.backend.folder.domain.Folder;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

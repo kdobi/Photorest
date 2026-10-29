@@ -1,6 +1,6 @@
-package com.photorest.backend.photo;
+package com.photorest.backend.photo.domain;
 
-import com.photorest.backend.folder.Folder;
+import com.photorest.backend.folder.domain.Folder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -72,4 +72,8 @@ public class Folder {
     public Instant getUpdatedAt() {
         return updatedAt;
     }
+
+    public void changeName(String name) {
+        this.name = name;
+    }
 }
